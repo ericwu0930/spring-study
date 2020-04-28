@@ -90,7 +90,7 @@ xmlns:c="http://www.springframework.org/schema/c"
 
 ### 5.4 bean的作用域
 
-![image-20200428100237753](D:\实习期间学习笔记\img\image-20200428100237753.png)
+![image-20200428100237753](https://tva1.sinaimg.cn/large/007S8ZIlgy1ge9qlcpalzj31i70c1jto.jpg)
 
 1. 单例模式（默认机制）
 
