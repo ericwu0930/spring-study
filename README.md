@@ -232,6 +232,8 @@ Spring AOP的底层。
 
 ### 8.1 静态代理额
 
+![企业微信截图_15880804648754](https://tva1.sinaimg.cn/large/007S8ZIlgy1ge9wgp25z2j30l109u74r.jpg)
+
 角色分析：
 
 * 抽象角色：一般会使用接口或者抽象类来解决
@@ -251,3 +253,32 @@ Spring AOP的底层。
 * 可以使真实角色的操作更加纯粹！不用关注一些公共业务
 * 公共业务交给代理角色，实现了业务的分工
 * 公共业务发生扩展的时候，方便集中管理
+
+![image-20200428233247117](../../Library/Application Support/typora-user-images/image-20200428233247117.png)
+
+### 8.2 动态代理
+
+* 动态代理和静态代理角色一样
+* 动态代理的代理类是动态生成的，不是我们直接写好的
+* 动态代理分为两大类：基于接口的动态代理，基于类的动态代理
+
+需要了解两个类：Proxy代理，InvocationHandler调用处理程序
+
+```java
+//InvocationHandler中只有一个方法
+Object invoke(Object proxy, Method method, Object[] args);
+//proxy为调用方法的代理对象
+//method是调用方法的一个反射
+//args则是调用方法的参数
+//InvocationHandler将请求转发给RealSubject,因此实现InvocationHandler的类中应该持有被代理的对象
+```
+
+Proxy提供了用于创建动态代理实例的静态方法。该类中使用一个静态方法newProxyInstance返回代理对象。该方法需要传入三个参数。
+
+```java
+public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h) throws IllegalArgumentException
+//loader为一个ClassLoader对象，定义了由哪个ClassLoader对象来对生成的代理对象进行加载
+//interfaces:为一个Interface对象的数组，表示的是我将要给我需要代理的对象提供一组什么接口，如果我提供了一组接口给它，那么这个代理对象就宣称实现了该接口(多态)，这样我就能调用这组接口中的方法了
+//h为一个InvocationHandler对象，表示的是当我这个动态代理对象在调用方法的时候，会关联到哪一个InvocationHandler对象上
+```
+
