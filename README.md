@@ -36,6 +36,8 @@ public void setUserDao(UserDao userDao) {
 * 之前是程序主动创建对象，控制权在程序员手上
 * set注入后，程序不再有主动性，而是变成了被动接受对象
 
+![image-20200428211603381](https://tva1.sinaimg.cn/large/007S8ZIlgy1ge9sktzwslj30lg0mq0wp.jpg)
+
 这种思想，从本质上解决了问题，码农不用再去管理对象的创建，系统的耦合性大大降低，可以更加专注在业务实现上。这是IOC的原型
 
 ## 3. IOC的本质
