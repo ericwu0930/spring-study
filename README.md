@@ -162,11 +162,60 @@ xmlns:c="http://www.springframework.org/schema/c"
 </beans>
 ```
 
-@Autowired
+**@Autowired**
 
 可以在属性上使用，也可以在set方式上使用
 
 使用Autowired我们可以不再编写Set方法，前提是你这个自动装配的属性在IOC容器中存在，且符合名字byType（先按照byType匹配，再使用byName匹配）
 
-如果使用@Autowired自动装配的环境比较复杂，自动装配无法通过一个注解【@Autowired】完成的时候，我们可以使用@Qualifier(value="xxx")来配合@Autowired的使用，指定唯一的bean对象的注入
+如果使用@Autowired自动装配的环境比较复杂，自动装配无法通过一个注解【@Autowired】完成的时候，我们可以使用**@Qualifier(value="xxx")**来配合@Autowired的使用，指定唯一的bean对象的注入
 
+**@Resource**
+
+自动装配，优先通过byName，再通过byType
+
+## 7. 使用注解开发
+
+对应于spring-06-annotation
+
+1. bean
+
+   **@Component**
+
+   组件，放在类上，说明这个类被Spring管理了，就是bean！
+
+2. 属性如何注入
+
+   **@Value**
+
+   属性的注入，类似于<property name="name" value="eric"/>
+
+3. 衍生的注解
+
+   @Component有几个衍生注解，我们在web开发中，会按照mvc三层架构分层！
+
+   * dao            【@Repository】
+   * service        【@Service】
+   * controller     【@Controller】
+
+4. 自动装配（Chapter6已讲）
+
+5. 作用域
+
+   @Scope("singleton")
+
+   @Scope("prototype")
+
+6. 小结
+
+   xml更加万能，适用于任何场合，维护简单方便；注解维护相对复杂，不是自己的类使用不了。
+
+   xml与注解最佳实践：xml用来管理bean；注解之复杂而完成属性的注入；
+
+   ```xml
+   <!--  指定要扫描的包，这个包下的注解会生效  -->
+       <context:component-scan base-package="io.github.ericwu0930"/>
+       <context:annotation-config/>
+   ```
+
+   
