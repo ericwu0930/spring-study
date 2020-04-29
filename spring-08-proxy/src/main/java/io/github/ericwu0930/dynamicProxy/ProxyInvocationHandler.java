@@ -13,10 +13,22 @@ public class ProxyInvocationHandler implements InvocationHandler {
     }
 
     public Object getProxy(){
-        return Proxy.newProxyInstance(this.getClass().getClassLoader(),rent.getClass().getInterfaces(),this);
+        return Proxy.newProxyInstance(this.getClass().getClassLoader(),
+                rent.getClass().getInterfaces(),this);
     }
+
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        seeHouse();
+        fare();
         Object invoke = method.invoke(rent, args);
         return invoke;
+    }
+
+    public void seeHouse(){
+        System.out.println("中介带看");
+    }
+
+    public void fare(){
+        System.out.println("收中介费");
     }
 }

@@ -282,3 +282,60 @@ public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces,
 //h为一个InvocationHandler对象，表示的是当我这个动态代理对象在调用方法的时候，会关联到哪一个InvocationHandler对象上
 ```
 
+设计动态代理类
+
+```java
+public class ProxyInvocationHandler implements InvocationHandler {
+    
+    private Rent rent;
+    public void setRent(Rent rent) {
+        this.rent = rent;
+    }
+
+    public Object getProxy(){
+        return Proxy.newProxyInstance(this.getClass().getClassLoader(),
+                                      rent.getClass().getInterfaces(),this);
+    }
+    
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        seeHouse();
+        fare();
+        Object invoke = method.invoke(rent, args);
+        return invoke;
+    }
+
+    public void seeHouse(){
+        System.out.println("中介带看");
+    }
+
+    public void fare(){
+        System.out.println("收中介费");
+    }
+}
+```
+
+动态代理的好处：一个动态代理类代理的是一个接口，一般对应一类业务（可以同时代理多个具有相同接口的类）
+
+## 9. AOP
+
+AOP：面向切面编程，关于AOP的一些[概念][1]
+
+### 9.1 使用Spring实现AOP
+
+导入Maven依赖
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.5</version>
+</dependency>
+```
+
+方法一：使用Spring API接口
+
+
+
+[1]: https://blog.csdn.net/u013782203/article/details/51799427
+
