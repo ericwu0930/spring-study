@@ -335,7 +335,9 @@ AOP：面向切面编程，关于AOP的一些[概念][1]
 
 方法一：使用Spring API接口
 
+方式二：使用自定义类来实现AOP
 
+方式三：使用注解实现
 
 [1]: https://blog.csdn.net/u013782203/article/details/51799427
 
