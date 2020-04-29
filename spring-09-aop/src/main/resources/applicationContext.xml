@@ -15,7 +15,7 @@
     <!--配置aop: 需要导入aop的约束-->
     <aop:config>
 <!--    切入点:expression:execution(要执行的位置
-              **** 每个星号分别表示 返回值类型 某方法的方法名 形参)   -->
+              * ** 每个星号分别表示 返回值类型 某方法的方法名 形参)   -->
         <aop:pointcut id="pointcut" expression="execution(* io.github.ericwu0930.service.UserServiceImpl.*(..))"/>
 <!--   执行环绕增加！     -->
         <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
