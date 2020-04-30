@@ -341,3 +341,15 @@ AOP：面向切面编程，关于AOP的一些[概念][1]
 
 [1]: https://blog.csdn.net/u013782203/article/details/51799427
 
+## 10. Mybatis与Spring的整合
+
+### 10.1 回忆Mybatis
+
+1. 编写实体类
+2. 编写核心配置文件
+3. 编写接口
+4. 编写Mapper.xml
+5. 测试
+
+### 10.2 Mybatis-Spring
+
