@@ -1,4 +1,4 @@
-package io.github.ericwu0930.dao;
+package io.github.ericwu0930.mapper;
 
 import io.github.ericwu0930.pojo.User;
 
