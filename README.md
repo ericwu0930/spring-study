@@ -79,7 +79,119 @@ IOC是一种编程思想，由主动的编程变成被动的接收，所谓的IO
 
 ### 5.1 构造器注入
 
+Example 1:
+
+```java
+package x.y;
+
+public class ThingOne {
+
+    public ThingOne(ThingTwo thingTwo, ThingThree thingThree) {
+        // ...
+    }
+}
+```
+
+通过构造器对类进行注入
+
+```xml
+<beans>
+    <bean id="beanOne" class="x.y.ThingOne">
+        <!--引用其他bean-->
+        <constructor-arg ref="beanTwo"/>
+        <constructor-arg ref="beanThree"/>
+    </bean>
+
+    <bean id="beanTwo" class="x.y.ThingTwo"/>
+
+    <bean id="beanThree" class="x.y.ThingThree"/>
+    
+</beans>
+```
+
+Example 2:
+
+```java
+package examples;
+
+public class ExampleBean {
+
+    // Number of years to calculate the Ultimate Answer
+    private int years;
+
+    // The Answer to Life, the Universe, and Everything
+    private String ultimateAnswer;
+
+    public ExampleBean(int years, String ultimateAnswer) {
+        this.years = years;
+        this.ultimateAnswer = ultimateAnswer;
+    }
+}
+```
+
+```xml
+<!--根据type对成员变量进行注入-->
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg type="int" value="7500000"/>
+    <constructor-arg type="java.lang.String" value="42"/>
+</bean>
+
+<!--根据index对成员变量进行注入-->
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg index="0" value="7500000"/>
+    <constructor-arg index="1" value="42"/>
+</bean>
+
+<!--根据成员变量的名字进行注入-->
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg name="years" value="7500000"/>
+    <constructor-arg name="ultimateAnswer" value="42"/>
+</bean>
+
+```
+
 ### 5.2 Set方式注入
+
+Example
+
+```java
+public class ExampleBean {
+
+    private AnotherBean beanOne;
+
+    private YetAnotherBean beanTwo;
+
+    private int i;
+
+    public void setBeanOne(AnotherBean beanOne) {
+        this.beanOne = beanOne;
+    }
+
+    public void setBeanTwo(YetAnotherBean beanTwo) {
+        this.beanTwo = beanTwo;
+    }
+
+    public void setIntegerProperty(int i) {
+        this.i = i;
+    }
+}
+```
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <!-- setter injection using the nested ref element -->
+    <property name="beanOne">
+        <ref bean="anotherExampleBean"/>
+    </property>
+
+    <!-- setter injection using the neater ref attribute -->
+    <property name="beanTwo" ref="yetAnotherBean"/>
+    <property name="integerProperty" value="1"/>
+</bean>
+
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+```
 
 ### 5.3 拓展方式注入
 
@@ -339,17 +451,96 @@ AOP：面向切面编程，关于AOP的一些[概念][1]
 
 方式三：使用注解实现
 
-[1]: https://blog.csdn.net/u013782203/article/details/51799427
+[1]: https://www.jianshu.com/p/27cc6a3bcab6
 
 ## 10. Mybatis与Spring的整合
 
 ### 10.1 回忆Mybatis
 
 1. 编写实体类
+
 2. 编写核心配置文件
+
 3. 编写接口
+
 4. 编写Mapper.xml
+
 5. 测试
+
+   ```java
+   1. 使用Resources.getResourceAsStream("mybatis-config.xml")将配置文件读为流
+   2. new SqlSessionFactoryBuilder().build(resourceAsStream);新建SqlSessionFactory
+   3. 新建一个SqlSession
+   4. 使用sqlSession与之前写好的dao接口绑定
+   5. 调用dao接口的方法
+   ```
 
 ### 10.2 Mybatis-Spring
 
+步骤：
+
+1. 编写数据源配置
+2. sqlSessionFactory
+3. sqlSessionTemplate
+4. 需要给接口添加实现类
+5. 测试
+
+可以发现，Mybatis与Spring的整合，需要额外写一个Spring的xml文件，如下所示，以及一个Dao接口的实现类
+
+```xml
+<!--  DataSource:使用Spring的数据源替换Mybatis的配置 我们这里使用Spring提供的JDBC-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+<!--  sqlSessionFactory  -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 绑定Mybatis配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:io/github/ericwu0930/mapper/*.xml"/>
+    </bean>
+<!--  就是我们的sqlSession  -->
+<!--   只能使用构造方法注入，因为没有set方法    -->     
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="userMapper" class="io.github.ericwu0930.mapper.UserMapperImpl">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+```
+
+```java
+public class UserMapperImpl implements UserMapper {
+    // 我们所有的操作，都是用sqlSession来执行，在原来，现在都是用SqlSessionTemplate
+    private SqlSessionTemplate sqlSession;
+
+    public void setSqlSession(SqlSessionTemplate sqlSession) {
+        this.sqlSession = sqlSession;
+    }
+
+    public List<User> selectUser() {
+        return sqlSession.getMapper(UserMapper.class).selectUser();
+    }
+}
+```
+
+## 11. 声明式事物
+
+回顾事物
+
+* 要么都成功，要么都失败，把一组业务当做一个业务来做
+* 在项目开发中，十分的重要，设计到数据的一致性问题，不能马虎
+* 确保完整性和一致性
+
+事物的ACID原则：
+
+* 原子性
+* 一致性
+* 隔离性
+  * 多个业务可能操作同一个资源，放置数据损坏
+* 持久性
+  * 事物一旦提交，无论系统发生什么问题，结果都不会再被影响，被持久化的写到存储器中
