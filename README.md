@@ -366,7 +366,7 @@ Spring AOP的底层。
 * 公共业务交给代理角色，实现了业务的分工
 * 公共业务发生扩展的时候，方便集中管理
 
-![image-20200428233247117](../../Library/Application Support/typora-user-images/image-20200428233247117.png)
+![image-20200428233247117](https://tva1.sinaimg.cn/large/007S8ZIlgy1gee1pgbp68j30uo0owmyl.jpg)
 
 ### 8.2 动态代理
 
