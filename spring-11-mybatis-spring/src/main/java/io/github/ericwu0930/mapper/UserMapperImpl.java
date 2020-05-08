@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2020/4/30
  */
 public class UserMapperImpl implements UserMapper {
-    // 我们所有的操作，都是用sqlSession来执行，在原来，现在都是用SqlSessionTemplate
+    // 我们所有的操作，在原来，都是用sqlSession来执行；现在都是用SqlSessionTemplate
     private SqlSessionTemplate sqlSession;
 
     public void setSqlSession(SqlSessionTemplate sqlSession) {
